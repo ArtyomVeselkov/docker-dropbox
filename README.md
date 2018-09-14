@@ -1,6 +1,6 @@
 # Dropbox in Docker
 
-This repository provides the stack with image adopted for running from the [Portainer](https://portainer.io).
+This repository provides the adopted stack for running customized image with single `docker-compose up` command.
 The original version of the image with technical notes: https://github.com/janeczku/docker-dropbox
 
 ## Quickstart
@@ -14,6 +14,10 @@ echo "USER_NAME=$(whoami)">.env
 docker-compose up -d
 ```
 
+### Deploy via Portainer
+
+Currently [Portainer](https://portainer.io) doesn't support build & restart commands in case of adding stack via GIT repository, that's why deploy can be done only manually.
+
 1. Create `.env` file and set up the name of the current user. Example of the file:
 *.env*
 ```
@@ -26,7 +30,7 @@ docker-compose up -d
 ```
 
 ## Variables
-Several variables can be passed via `.env` file.
+Several variables can be passed via `.env` file, or alternativly directly set to the `docker-compose.yml`.
 
 **USER_NAME** (required)
 The name of the current user. Can be determined with `whoami`.
@@ -44,5 +48,5 @@ Set this to `True` to skip updating to the latest Dropbox version on container s
 
 Were done next changes:
 1. Dockerfile with corresponded scripts are moved to the `image/` directory.
-2. Docker-composer.yml file is provided, so the stack can be launched within the Portainer (`Stacks > Create Stack > Build method: Git Repository`).
+2. Docker-composer.yml file is provided, so the stack can be launched within the Portainer (`Stacks > Add Stack > Build method: Git Repository`).
 3. Updates to a Dockerfile (GnuPG dependencies and replacement of the key-service with working one).

@@ -9,6 +9,6 @@ services:
         - "/home/${USER_NAME}/DropboxDocker:/dbox/Dropbox"
 
       environment:
-        - DBOX_UID="${UID}"
-        - DBOX_GID="${GID}"
+        - DBOX_UID=
+        - DBOX_GID=
         - DBOX_SKIP_UPDATE=
