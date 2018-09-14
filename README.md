@@ -1,77 +1,48 @@
 # Dropbox in Docker
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/janeczku/dropbox.svg?maxAge=2592000)][hub]
-[![License](https://img.shields.io/github/license/janeczku/docker-alpine-kubernetes.svg?maxAge=2592000)]()
+This repository provides the stack with image adopted for running from the [Portainer](https://portainer.io).
+The original version of the image with technical notes: https://github.com/janeczku/docker-dropbox
 
-[hub]: https://hub.docker.com/r/janeczku/dropbox/
+## Quickstart
 
-Run Dropbox inside Docker. Fully working with local host folder mount or inter-container linking (via `--volumes-from`).
+### Run manually
 
-This repository provides the [janeczku/dropbox](https://registry.hub.docker.com/u/janeczku/dropbox/) image.
+Run the next commands:
+```bash
+# After cloning repository and `cd` into it.
+echo "USER_NAME=$(whoami)">.env
+docker-compose up -d
+```
 
-## Usage examples
+1. Create `.env` file and set up the name of the current user. Example of the file:
+*.env*
+```
+USER_NAME=user
+```
 
-### Quickstart
+2. Launch stack (building of the appropriate image is performed automatically)
+```bash
+docker-compose up -d
+```
 
-    docker run -d --restart=always --name=dropbox janeczku/dropbox
+## Variables
+Several variables can be passed via `.env` file.
 
-### Dropbox data mounted to local folder on the host
+**USER_NAME** (required)
+The name of the current user. Can be determined with `whoami`.
 
-    docker run -d --restart=always --name=dropbox \
-    -v /path/to/localfolder:/dbox/Dropbox \
-    janeczku/dropbox
+**DBOX_UID**
+Run Dropbox with a custom user ID (matching the owner of the mounted files). Default: `1000`.
 
-### Run dropbox with custom user/group id
-This fixes file permission errrors that might occur when mounting the Dropbox file folder (`/dbox/Dropbox`) from the host or a Docker container volume. You need to set `DBOX_UID`/`DBOX_GID` to the user id and group id of whoever owns these files on the host or in the other container.
+**DBOX_GID**
+Run Dropbox with a custom group id (matching the group of the mounted files). Default: `1000`.
 
-    docker run -d --restart=always --name=dropbox \
-    -e DBOX_UID=110 \
-    -e DBOX_GID=200 \
-    janeczku/dropbox
+**DBOX_SKIP_UPDATE** 
+Set this to `True` to skip updating to the latest Dropbox version on container start. Default: `False`.
 
-### Enable LAN Sync
+## Main changes
 
-    docker run -d --restart=always --name=dropbox \
-    --net="host" \
-    janeczku/dropbox
-
-## Linking to Dropbox account after first start
-
-Check the logs of the container to get URL to authenticate with your Dropbox account.
-
-    docker logs dropbox
-
-Copy and paste the URL in a browser and login to your Dropbox account to associate.
-
-    docker logs dropbox
-
-You should see something like this:
-
-> "This computer is now linked to Dropbox. Welcome xxxx"
-
-## Manage exclusions and check sync status
-
-    docker exec -t -i dropbox dropbox help
-
-## ENV variables
-
-**DBOX_UID**  
-Default: `1000`  
-Run Dropbox with a custom user id (matching the owner of the mounted files)
-
-**DBOX_GID**  
-Default: `1000`  
-Run Dropbox with a custom group id (matching the group of the mounted files)
-
-**$DBOX_SKIP_UPDATE**  
-Default: `False`  
-Set this to `True` to skip updating to the latest Dropbox version on container start
-
-
-## Exposed volumes
-
-`/dbox/Dropbox`
-Dropbox files
-
-`/dbox/.dropbox`
-Dropbox account configuration
+Were done next changes:
+1. Dockerfile with corresponded scripts are moved to the `image/` directory.
+2. Docker-composer.yml file is provided, so the stack can be launched within the Portainer (`Stacks > Create Stack > Build method: Git Repository`).
+3. Updates to a Dockerfile (GnuPG dependencies and replacement of the key-service with working one).
