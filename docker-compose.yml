@@ -1,0 +1,14 @@
+version: '3'
+services:
+    dropbox:
+      restart: always
+      build:
+        context: ./image
+
+      volumes:
+        # To add
+
+      environment:
+        - DBOX_UID=
+        - DBOX_GID=
+        - DBOX_SKIP_UPDATE=
