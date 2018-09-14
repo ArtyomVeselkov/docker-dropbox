@@ -30,7 +30,7 @@ docker-compose up -d
 ```
 
 ## Variables
-Several variables can be passed via `.env` file, or alternativly directly set to the `docker-compose.yml`.
+Several variables can be passed via `.env` file, or alternatively directly set to the `docker-compose.yml`.
 
 **USER_NAME** (required)
 The name of the current user. Can be determined with `whoami`.
